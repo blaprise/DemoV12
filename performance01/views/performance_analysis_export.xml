@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="paperformat_landscape_report" model="report.paperformat">
+        <field name="name">Landscape A4</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">40</field>
+        <field name="margin_bottom">23</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+    </record>
+
+
+    <report
+            id="report_performance_analysis"
+            string="Export To PDF"
+            model="performance"
+            report_type="qweb-pdf"
+            file="performance01.report_export_to_pdf_document"
+            name="performance01.report_export_to_pdf_document"
+            paperformat="performance01.paperformat_landscape_report"
+
+    />
+
+    <template id="report_export_to_pdf_document">
+        <t t-call="web.external_layout">
+            <t t-call="web.html_container">
+                <div class="page" style="padding-top:1px !important;">
+                    <table width="1400">
+                        <tr width="1400">
+                            <td width="1400" class="text-center" style="font-size: 25px; color: rgb(255, 0, 150);">
+                                <strong>Performance Analysis Report</strong>
+                            </td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <br/>
+                    <br/>
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Opportunity Description</th>
+                                <th class="text-center">Opened Date</th>
+                                <th class="text-center">Expected Closing</th>
+                                <th class="text-center">Closed</th>
+                                <th class="text-center">Operator</th>
+                                <th class="text-center">Salesperson</th>
+                                <th class="text-center">Project</th>
+                                <th class="text-center">Description</th>
+                                <th class="text-center">Manufacturer</th>
+                                <th class="text-center">Category</th>
+                                <th class="text-center">Distributor</th>
+                                <th class="text-center">$/Week</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Notes</th>
+                                <th class="text-center">Reason</th>
+                            </tr>
+                        </thead>
+                        <!-- <t t-set="o" t-value="doc.with_context({'lang':doc.partner_id.lang})" /> -->
+                        <tbody>
+                            <tr t-foreach="docs" t-as="doc">
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-field="doc.lead_id.name"/>
+                                </td>
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-field="doc.date_opened"/>
+                                </td>
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-field="doc.date_deadline"/>
+                                </td>
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-field="doc.activity_closed_date"/>
+                                </td>
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-field="doc.operator_id"/>
+                                </td>
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-field="doc.user_id.name"/>
+                                </td>
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-field="doc.project_id.name"/>
+                                </td>
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-field="doc.lead_notes"/>
+                                </td>
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-field="doc.partner_id.name"/>
+                                </td>
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-field="doc.category_id.name"/>
+                                </td>
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-esc="doc._get_distributors(doc)"/>
+                                </td>
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-field="doc.rate"/>
+                                </td>
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-field="doc.state"/>
+                                </td>
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-field="doc.notes"/>
+                                </td>
+                                <td class="text-center" style="border: 1px solid black;">
+                                    <span t-field="doc.lost_reason.name"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- <template id="report_export_to_pdf">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="performance01.report_export_to_pdf_document" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template> -->
+
+
+    <!-- ############  Action Server en version 9 ######################## -->
+    <!-- <record id="action_server_bulk_confirm" model="ir.actions.server">
+         <field name="name">Export To Excel</field>
+         <field name="model_id" ref="model_performance"/>
+         &lt;!&ndash; <field name="condition">object.state in ['submit_ho']</field> &ndash;&gt;
+         <field name="state">code</field>
+         <field name="code">
+             action = self.action_bulk_export(cr, uid, context)
+         </field>
+     </record>
+
+     <record model="ir.values" id="action_window_bulk_confirm">
+         <field name="name">Export To Excel</field>
+         <field name="model" eval="'performance'"/>
+         <field name="key">action</field>
+         <field name="key2">client_action_multi</field>
+         <field name="context">{'active_ids':context.get('active_ids')}</field>
+         <field name="value" eval="'ir.actions.server,%d'%action_server_bulk_confirm"/>
+     </record>-->
+
+
+    <!-- ############  Action Server en version 12 ######################## -->
+    <record id="action_server_bulk_confirm" model="ir.actions.server">
+        <field name="name">Export To Excel</field>
+        <field name="model_id" ref="model_performance"/>
+        <field name="binding_model_id" ref="model_performance"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_bulk_export()</field>
+    </record>
+
+
+
+</odoo>
+

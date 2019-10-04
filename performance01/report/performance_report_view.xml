@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <!--<record id="view_performance_report_pivot" model="ir.ui.view">-->
+         <!--<field name="name">performance.report.pivot</field>-->
+         <!--<field name="model">performance.report</field>-->
+         <!--<field name="arch" type="xml">-->
+             <!--<pivot string="Performance Analysis" disable_linking="True">-->
+                 <!--<field name="operator_id" type="col"/>-->
+                 <!--<field name="date" interval="month" type="row"/>-->
+                 <!--<field name="rate" type="measure"/>-->
+             <!--</pivot>-->
+         <!--</field>-->
+    <!--</record>-->
+
+    <!--<record id="view_performance_report_graph" model="ir.ui.view">-->
+         <!--<field name="name">performance.report.graph</field>-->
+         <!--<field name="model">performance.report</field>-->
+         <!--<field name="arch" type="xml">-->
+             <!--<graph string="Performance Analysis">-->
+                 <!--<field name="date" type="row"/>-->
+                 <!--<field name="rate" type="measure"/>-->
+             <!--</graph>-->
+         <!--</field>-->
+    <!--</record>-->
+
+
+    <record id="view_performance_report_search" model="ir.ui.view">
+        <field name="name">performance.report.search</field>
+        <field name="model">performance</field>
+        <field name="arch" type="xml">
+            <search string="Performance Analysis">
+                <field name="operator_id"/>
+                <field name="user_id"/>
+                <field name="establishment_id"/>
+                <field name="business_id"/>
+                <field name="meal_id"/>
+                <field name="supply_id"/>
+
+                <group expand="0" string="Extended Filters">
+                    <field name="category_id" filter_domain="[('category_id', 'child_of', self)]"/>
+                </group>
+                <group expand="1" string="Group By">
+                    <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
+                    <filter string="Operator" name="Operator" context="{'group_by':'operator_id'}"/>
+                    <filter string="Product Category" name="Category" context="{'group_by':'category_id'}"/>
+                    <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                    <filter name="opportunity" string="Opportunity" context="{'group_by':'lead_name'}"/>
+                    <separator/>
+                    <filter name="Establishment" string="Establishment" context="{'group_by':'establishment_id'}"/>
+                    <filter name="Business" string="Business" context="{'group_by':'business_id'}"/>
+                    <filter name="Nbr meals per day" string="Nbr meals per day" context="{'group_by':'meal_id'}"/>
+                    <filter name="Supply" string="Supply" context="{'group_by':'supply_id'}"/>
+                    <separator/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="view_performance_report_tree" model="ir.ui.view">
+        <field name="name">performance.report.tree</field>
+        <field name="model">performance</field>
+        <field name="arch" type="xml">
+            <tree create="false">
+                <field name="lead_name"/>
+                <field name="date_opened"/>
+                <field name="date_deadline"/>
+                <field name="activity_closed_date"/>
+                <field name="operator_id"/>
+                <field name="user_id"/>
+                <field name="project_id"/>
+                <field name="lead_notes"/>
+                <field name="partner_id"/>
+                <field name="category_id"/>
+                <field name="distributor_ids" widget="many2many_tags"/>
+                <field name="rate"/>
+                <field name="state"/>
+                <field name="notes"/>
+                <field name="lost_reason"/>
+                <button name="show" type="object" string="Show" class="oe_link"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_performance_report" model="ir.actions.act_window">
+        <field name="name">Performance Analysis</field>
+        <field name="res_model">performance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id"></field>  <!-- force empty -->
+        <field name="search_view_id" ref="view_performance_report_search"/>
+        <field name="context">{'search_default_opportunity': 1}</field>
+        <field name="help">This report performs analysis on your performance.</field>
+    </record>
+
+    <menuitem name="Performance Analysis" action="action_performance_report" id="menu_report_performance" parent="sale.menu_sale_report" sequence="10"/>
+    <menuitem name="Performance Analysis" action="action_performance_report" id="menu_report_performance_crm" parent="crm.crm_menu_report" sequence="10"/>
+
+</data>
+</odoo>

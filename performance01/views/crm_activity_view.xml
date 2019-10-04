@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="opportunity_dec_view_form">
+            <field name="name">crm.form.opportunity.desc</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/div[3]" position="replace">
+                    <div class="label label-success pull-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Done</div>
+                </xpath>
+                <xpath expr="//form/sheet/div[@class='oe_title']/h2" position="replace">
+                    <h2 class="o_hidden">
+                        <div>
+                            <label for="planned_revenue" invisible="1" class="oe_edit_only" />
+                            <div class="o_row">
+                                <field name="company_currency" invisible="1"/>
+                                <field name="planned_revenue" invisible="1" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                <span class="oe_grey"> at </span>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="probability" invisible="1" class="oe_edit_only"/>
+                            <div class="o_row d-flex">
+                                <field name="probability" invisible="0" widget="integer"/>
+                                <span>%%</span>
+                            </div>
+                        </div>
+                    </h2>
+                </xpath>
+
+                <notebook position="before">
+                    <group>
+                        <group>
+                            <field name="date_opened"/>
+                            <field name="date_closed" readonly="0"/>
+                        </group>
+                        <group>
+                            <field name="project_id"/>
+                        </group>
+                    </group>
+                </notebook>
+                <xpath expr="//page['0']" position="before">
+                    <page string="Performance">
+                        <field name="performance_id" context="{'partner':partner_id}">
+                            <tree editable="bottom">
+                                <field name="partner_id"/>
+                                <field name="category_id" domain="[('partner_id','=',partner_id)]"/>
+                                <field name="distributor_ids" widget="many2many_tags" />
+                                <field name="rate"/>
+                                <field name="notes"/>
+                                <field name="state"/>
+                                <field name="activity_closed_date"/>
+                                <field name="lost_reason" string="If lost, Why?"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Opportunity Descreption -->
+        <record id="view_opportunity_desc_tree" model="ir.ui.view">
+            <field name="name">opportunity.description.view.tree</field>
+            <field name="model">opportunity.description</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_view_opportunity_desc" model="ir.actions.act_window">
+            <field name="name">Opportunity Desc</field>
+            <field name="res_model">opportunity.description</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_opportunity_desc_tree"/>
+        </record>
+
+        <record model="ir.ui.view" id="crm_stage_notification">
+            <field name="name">crm.stage.notification.form</field>
+            <field name="model">crm.stage</field>
+            <field name="inherit_id" ref="crm.crm_stage_form" />
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <field name="fold" position="after">
+                    <field name="notification" />
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

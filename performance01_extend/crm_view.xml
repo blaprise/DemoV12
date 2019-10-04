@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+  <data>
+
+    <record model="ir.ui.view" id="avoid_quick_create_in_lead_form_view">
+      <field name="name">crm.lead</field>
+      <field name="model">crm.lead</field>
+      <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+      <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                    <attribute name="options">{'no_create_edit': True, 'no_quick_create': True}</attribute>
+            </field>
+            <field name="user_id" position="attributes">
+                    <attribute name="options">{'no_create_edit': True, 'no_quick_create': True}</attribute>
+            </field>
+
+      </field>
+    </record>
+
+        <record model="ir.ui.view" id="performance01.opportunity_dec_view_form">
+            <field name="name">crm.form.opportunity.desc</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/div[3]" position="replace">
+                    <div class="label label-success pull-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Done</div>
+                </xpath>
+                <xpath expr="//form/sheet/div[@class='oe_title']/h2" position="replace">
+                    <h2 class="o_hidden">
+                        <div>
+                            <label for="planned_revenue" invisible="1" class="oe_edit_only" />
+                            <div class="o_row">
+                                <field name="company_currency" invisible="1"/>
+                                <field name="planned_revenue" invisible="1" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                <span class="oe_grey"> at </span>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="probability" invisible="1" class="oe_edit_only"/>
+                            <div class="o_row">
+                                <field name="probability" invisible="0" widget="integer"/>
+                                <span>%%</span>
+                            </div>
+                        </div>
+                    </h2>
+                </xpath>
+
+                <notebook position="before">
+                    <group>
+                        <group>
+                            <field name="date_opened"/>
+                            <field name="date_closed" readonly="0"/>
+                        </group>
+                        <group>
+                            <field name="project_id" options="{'no_create_edit': True, 'no_quick_create': True}" />
+                        </group>
+                    </group>
+                </notebook>
+                <xpath expr="//page['0']" position="before">
+                    <page string="Performance">
+                        <field name="performance_id" context="{'partner':partner_id}">
+                            <tree editable="bottom">
+                                <field name="partner_id" options="{'no_create_edit': True, 'no_quick_create': True}"/>
+                                <field name="category_id" domain="[('partner_id','=',partner_id)]" options="{'no_create_edit': True, 'no_quick_create': True}"/>
+                                <field name="distributor_ids" widget="many2many_tags" options="{'no_create_edit': True, 'no_quick_create': True}"/>
+                                <field name="rate"/>
+                                <field name="notes"/>
+                                <field name="state"/>
+                                <field name="activity_closed_date"/>
+                                <field name="lost_reason" string="If lost, Why?" options="{'no_create_edit': True, 'no_quick_create': True}"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+    <record id="action_server_performance_export_all" model="ir.actions.server">
+        <field name="name">Export Last Search</field>
+        <field name="model_id" ref="model_performance"/>
+        <field name="binding_model_id" ref="model_performance"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_performance_export_all()</field>
+    </record>
+
+
+  </data>
+</odoo>
+

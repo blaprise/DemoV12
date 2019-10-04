@@ -1,0 +1,31 @@
+<odoo>
+  <data>
+
+    <record id="view_performance_analysis_xcel_report" model="ir.ui.view">
+            <field name="name">Performance Analysis Report</field>
+            <field name="model">performance.analysis.excel</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            	<form string="Report">
+					<group col="4" colspan="4">
+						<field name="name"/>
+						<field name="data" readonly="1" filename="name"/>
+					</group>
+					<footer>
+	                     <button special="cancel" string="Close" type="object" class="btn-primary"/>
+                	</footer>
+				</form>
+            </field>
+        </record>
+
+
+    <record id="performance_analysis_xcel_action" model="ir.actions.act_window">
+        <field name="name">performance analysis xcel</field>
+        <field name="res_model">performance.analysis.excel</field>
+        <field name="src_model">performance.analysis.excel</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+  </data>
+</odoo>

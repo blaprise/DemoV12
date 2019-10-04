@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="menu_performance_conf" name="Performance" parent="sale.menu_sale_config"
+            sequence="100" groups="group_performance_manager"/>
+
+        <menuitem id="menu_partner_regions" name="Regions" parent="menu_performance_conf"
+                  action="action_view_partner_regions" sequence="1"/>
+
+        <menuitem id="menu_partner_establishment" name="Establishment" parent="menu_performance_conf"
+                  action="action_view_partner_establishment" sequence="2"/>
+
+        <menuitem id="menu_partner_meal" name="Nbr Meals" parent="menu_performance_conf"
+                  action="action_view_partner_meal" sequence="3"/>
+
+        <menuitem id="menu_partner_business" name="Business" parent="menu_performance_conf"
+                  action="action_view_partner_business" sequence="4"/>
+
+        <menuitem id="menu_partner_supply" name="Supply" parent="menu_performance_conf"
+                  action="action_view_partner_supply" sequence="5"/>
+
+        <menuitem id="menu_partner_operator" name="Operator" parent="menu_performance_conf"
+                  action="action_view_partner_operator" sequence="6"/>
+
+        <menuitem id="menu_partner_group" name="Group" parent="menu_performance_conf"
+                  action="action_view_partner_group" sequence="7"/>
+
+        <menuitem id="menu_opportunity_desc" name="Opportunity Desc" parent="crm.menu_crm_config_lead"
+                  action="action_view_opportunity_desc" sequence="2"/>
+
+    </data>
+</odoo>
